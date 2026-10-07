@@ -1,4 +1,4 @@
-name: Autotag and release (frigatemqtt)
+name: release
 
 on:
   push:
