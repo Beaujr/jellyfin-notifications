@@ -13,8 +13,8 @@ This code just renames the header `X-Mediabrowser-Token` to `Mediabrowser Token`
 ## Config
 *Flags*
 ```bash
-server  = flag.String("jellyfin", "https://jf.whickerx.info", "Jellyfin Server URL. eg http://192.168.1.1:8096")
-library = flag.String("library", "767bffe4f11c93ef34b805451a696a4e", "Jellyfin library eg 767bffe4f11c93ef34b805451a696a4e")
+server  = flag.String("jellyfin", "http://192.168.1.1", "Jellyfin Server URL. eg http://192.168.1.1:8096")
+library = flag.String("library", "ajd4b4rb4htb4h5bt4bt45bt", "Jellyfin library eg 767bffe4f11c93ef34b805451a696a4e")
 ```
 
 *Example Docker Compose*
