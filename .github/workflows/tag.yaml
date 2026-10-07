@@ -1,0 +1,35 @@
+name: Autotag
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Create new version tag
+        run: |
+          git fetch --tags
+
+          LAST_TAG=$(git tag --list "v*-Frigate" --sort=-v:refname | head -n 1)
+
+          if [ -z "$LAST_TAG" ]; then
+            NEW_TAG="v0.1.0-Frigate"
+          else
+            VERSION=${LAST_TAG#v}
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+            PATCH=$((PATCH + 1))
+            NEW_TAG="v$MAJOR.$MINOR.$PATCH-Frigate"
+          fi
+
+          git tag $NEW_TAG
+          git push origin $NEW_TAG

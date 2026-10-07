@@ -1,0 +1,55 @@
+version: 2
+before:
+  hooks:
+    - go mod tidy
+    - go mod vendor
+project_name: jellyfin-notifications
+builds:
+  - env:
+      - CGO_ENABLED=0
+    id: jellyfin-notifications
+    main: ./cmd/main.go
+    binary: app
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+dockers:
+  - image_templates:
+      - "ghcr.io/beaujr/jellyfin-notifications:{{ .Version }}-amd64"
+      - "ghcr.io/beaujr/jellyfin-notifications:latest-amd64"
+    dockerfile: Dockerfile
+    use: buildx
+    goos: linux
+    goarch: amd64
+    ids:
+      - jellyfin-notifications
+    build_flag_templates:
+      - "--pull"
+      - "--platform=linux/amd64"
+  - image_templates:
+      - "ghcr.io/beaujr/jellyfin-notifications:{{ .Version }}-arm64"
+      - "ghcr.io/beaujr/jellyfin-notifications:latest-arm64"
+    use: buildx
+    dockerfile: Dockerfile
+    goos: linux
+    goarch: arm64
+    ids:
+      - jellyfin-notifications
+    build_flag_templates:
+      - "--pull"
+      - "--platform=linux/arm64"
+docker_manifests:
+  - name_template: "ghcr.io/beaujr/jellyfin-notifications:latest"
+    image_templates:
+      - "ghcr.io/beaujr/jellyfin-notifications:latest-amd64"
+      - "ghcr.io/beaujr/jellyfin-notifications:latest-arm64"
+  - name_template: "ghcr.io/beaujr/jellyfin-notifications:{{ .ShortCommit }}"
+    image_templates:
+      - "ghcr.io/beaujr/jellyfin-notifications:latest-amd64"
+      - "ghcr.io/beaujr/jellyfin-notifications:latest-arm64"
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Runtime.Goos }}{{ .Runtime.Goarch }}"
