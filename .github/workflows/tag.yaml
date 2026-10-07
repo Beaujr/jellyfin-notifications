@@ -1,4 +1,4 @@
-name: Autotag
+name: tag and release
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   packages: write
 
 jobs:
-  tag:
+  tag-and-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -33,3 +33,18 @@ jobs:
 
           git tag $NEW_TAG
           git push origin $NEW_TAG
+          echo "GORELEASER_CURRENT_TAG=$NEW_TAG" >> "$GITHUB_ENV"
+          echo "GORELEASER_PREVIOUS_TAG=$LAST_TAG" >> "$GITHUB_ENV"
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
