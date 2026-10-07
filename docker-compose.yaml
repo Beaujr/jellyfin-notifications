@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+  jellyfin-notifications:
+    restart: always
+    container_name: jellyfin-notifications
+    image: ghcr.io/beaujr/jellyfin-notifications:latest
+    command:
+      - "--jellyfin=http://192.168.1.1:8096"
+      - "--library=43h43kj43khbrjh4vjhvrjvjhv"
+    ports:
+      - 8080:8080

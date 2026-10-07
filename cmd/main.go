@@ -20,6 +20,7 @@ func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		logger.Info("Received webhook call")
 		statusCode, err := updateJellyfin(r.Header.Get("X-Mediabrowser-Token"))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
